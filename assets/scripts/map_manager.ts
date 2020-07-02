@@ -131,7 +131,7 @@ export default class MapManager extends cc.Component {
     }
 
     onClickMap(x, y) {
-        let score = this._getScoreNext(x, y)
+        let score = this._getScoreNext(x, y, 0) + 1.2
         this.mapDatas[x][y].setLevelByScore(score)
         console.log("=====" + x + "====" + y + "======" + score)
 
@@ -147,7 +147,7 @@ export default class MapManager extends cc.Component {
             }
             let newList = []
             for (let k = 0; k < saveList.length; k++) {
-                newList.push(this.mapDatas[i][k])
+                newList.push(this.mapDatas[i][saveList[k]])
             }
             newMapDatas[i] = newList
         }
@@ -164,28 +164,29 @@ export default class MapManager extends cc.Component {
         this.InitMapEntity()
         this.checkConnect(0, 0)
     }
-    _getScoreNext(x, y) {
+    _getScoreNext(x, y, pos) {
         let mapData = this.mapDatas[x][y]
         let score = 0
-        if (mapData) {
-            if (!mapData.isNeedClear) {
-                mapData.isNeedClear = true
-                score += mapData.getHeavy()
-            } else {
+        if (mapData) {            
+            if(mapData.isNeedClear){
                 return 0
             }
-            if (mapData.isNextXConnect) {
-                score += this._getScoreNext(x + 1, y)
+            mapData.isNeedClear = true
+            score += mapData.getHeavy()
+            if (mapData.isNextXConnect && pos != 3) {
+                score += this._getScoreNext(x + 1, y,1)
             }
-            if (mapData.isNextYConnect) {
-                score += this._getScoreNext(x, y + 1)
+            if (mapData.isNextYConnect && pos != 4) {
+                score += this._getScoreNext(x, y + 1,2)
             }
-            if (mapData.isLeftXConnect) {
-                score += this._getScoreNext(x - 1, y)
+            if (mapData.isLeftXConnect && pos != 1) {
+                score += this._getScoreNext(x - 1, y,3)
             }
-            if (mapData.isLeftYConnect) {
-                score += this._getScoreNext(x, y - 1)
+            if (mapData.isLeftYConnect && pos != 2) {
+                score += this._getScoreNext(x, y - 1,4)
             }
+            console.log("======" + x +'====' + y)
+                
         }
         return score
     }

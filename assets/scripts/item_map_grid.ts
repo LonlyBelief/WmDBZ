@@ -24,20 +24,25 @@ export default class ItemMapGrid extends cc.Component {
 
         let color
         let mapData = MapManager.instance.mapDatas[this.indexX][this.indexY]
-        switch (mapData.type) {
-            case 1:
-                color = cc.Color.RED
-                break
-            case 2:
-                color = cc.Color.YELLOW
-                break
-            case 3:
-                color = cc.Color.BLUE
-                break
+        if(mapData){
+            switch (mapData.type) {
+                case 1:
+                    color = cc.Color.RED
+                    break
+                case 2:
+                    color = cc.Color.YELLOW
+                    break
+                case 3:
+                    color = cc.Color.BLUE
+                    break
+            }
+            this.sprite_main.node.color = color
+            this.label_level.string = mapData.level.toString()
+            this.node.setPosition(new cc.Vec2( -250 +this.indexX * 100, this.indexY * 100))
+        }else{
+            this.sprite_main.node.color = cc.Color.WHITE
         }
-        this.sprite_main.node.color = color
-        this.label_level.string = mapData.level.toString()
-        this.node.setPosition(new cc.Vec2(this.indexX * 100, this.indexY * 100))
+        
     }
 
     onClick() {
