@@ -24,7 +24,7 @@ export default class ItemMapGrid extends cc.Component {
 
         let color
         let mapData = MapManager.instance.mapDatas[this.indexX][this.indexY]
-        if(mapData){
+        if (mapData) {
             switch (mapData.type) {
                 case 1:
                     color = cc.Color.RED
@@ -38,11 +38,27 @@ export default class ItemMapGrid extends cc.Component {
             }
             this.sprite_main.node.color = color
             this.label_level.string = mapData.level.toString()
-            this.node.setPosition(new cc.Vec2( -250 +this.indexX * 100, this.indexY * 100))
-        }else{
+            this.node.setPosition(new cc.Vec2(-250 + this.indexX * 100, this.indexY * 100))
+        } else {
             this.sprite_main.node.color = cc.Color.WHITE
         }
-        
+    }
+
+    moveTo(aimIndex) {
+        let aim = aimIndex * 100
+        new cc.Tween()
+            .target(this.node)
+            .to(1, { position: new cc.Vec2(this.node.position.x, aim) })
+            .start()
+    }
+
+    moveBy() {
+        let aim = this.indexY * 100
+        new cc.Tween()
+            .target(this.node)
+            .set({ position: new cc.Vec2(-250 + this.indexX * 100, 600), active: true })
+            .to(1, { position: new cc.Vec2(-250 + this.indexX * 100, aim) })
+            .start()
     }
 
     onClick() {

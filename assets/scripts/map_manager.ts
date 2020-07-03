@@ -112,12 +112,12 @@ export default class MapManager extends cc.Component {
 
     _setCheckLeftX(x, y, connect) {
         if (this.mapDatas[x] && this.mapDatas[x][y]) {
-            return this.mapDatas[x][y].isLeftXConnect == connect
+            this.mapDatas[x][y].isLeftXConnect = connect
         }
     }
     _setCheckLeftY(x, y, connect) {
         if (this.mapDatas[x] && this.mapDatas[x][y]) {
-            return this.mapDatas[x][y].isLeftYConnect == connect
+            this.mapDatas[x][y].isLeftYConnect = connect
         }
     }
 
@@ -131,15 +131,16 @@ export default class MapManager extends cc.Component {
     }
 
     onClickMap(x, y) {
-        let score = this._getScoreNext(x, y, 0) + 1.2
+        let score = this._getScoreNext(x, y, 0)
         this.mapDatas[x][y].setLevelByScore(score)
-        console.log("=====" + x + "====" + y + "======" + score)
 
         let newMapDatas = []
+        let removeList = []
         for (let i = 0; i < 5; i++) {
             let saveList = []
             for (let j = 0; j < 5; j++) {
                 if (this.mapDatas[i][j].isNeedClear) {
+                    this.mapEntitys[i * 5 + j].node.active = false
                     // removeList.push(j)
                 } else {
                     saveList.push(j)
@@ -147,7 +148,17 @@ export default class MapManager extends cc.Component {
             }
             let newList = []
             for (let k = 0; k < saveList.length; k++) {
-                newList.push(this.mapDatas[i][saveList[k]])
+                let orY = saveList[k]
+                let orIndex = i * 5 + orY
+                let aimIndex = i * 5 + k
+                removeList.push(orIndex)
+
+                let mid = this.mapEntitys[aimIndex]
+                this.mapEntitys[aimIndex] = this.mapEntitys[orIndex]
+                this.mapEntitys[orIndex] = mid
+                this.mapEntitys[aimIndex].moveTo(k)
+
+                newList.push(this.mapDatas[i][orY])
             }
             newMapDatas[i] = newList
         }
@@ -157,6 +168,9 @@ export default class MapManager extends cc.Component {
                 } else {
                     let type = Math.ceil(Math.random() * 3)
                     newMapDatas[i][j] = new MapData(type, 1, i, j)
+
+                    this.mapEntitys[i * 5 + j].Init(i, j)
+                    this.mapEntitys[i * 5 + j].moveBy()
                 }
             }
         }
@@ -164,29 +178,28 @@ export default class MapManager extends cc.Component {
         this.InitMapEntity()
         this.checkConnect(0, 0)
     }
+
     _getScoreNext(x, y, pos) {
         let mapData = this.mapDatas[x][y]
         let score = 0
-        if (mapData) {            
-            if(mapData.isNeedClear){
+        if (mapData) {
+            if (mapData.isNeedClear) {
                 return 0
             }
             mapData.isNeedClear = true
             score += mapData.getHeavy()
             if (mapData.isNextXConnect && pos != 3) {
-                score += this._getScoreNext(x + 1, y,1)
+                score += this._getScoreNext(x + 1, y, 1)
             }
             if (mapData.isNextYConnect && pos != 4) {
-                score += this._getScoreNext(x, y + 1,2)
+                score += this._getScoreNext(x, y + 1, 2)
             }
             if (mapData.isLeftXConnect && pos != 1) {
-                score += this._getScoreNext(x - 1, y,3)
+                score += this._getScoreNext(x - 1, y, 3)
             }
             if (mapData.isLeftYConnect && pos != 2) {
-                score += this._getScoreNext(x, y - 1,4)
+                score += this._getScoreNext(x, y - 1, 4)
             }
-            console.log("======" + x +'====' + y)
-                
         }
         return score
     }
