@@ -14,6 +14,10 @@ export default class ItemMapGrid extends cc.Component {
     indexX: number = 0
     indexY: number = 0
 
+    offsetX:number = -200
+    offsetY:number = -200
+   
+
     onLoad() {
         this.btn_select.node.on("click", this.onClick, this)
     }
@@ -38,26 +42,28 @@ export default class ItemMapGrid extends cc.Component {
             }
             this.sprite_main.node.color = color
             this.label_level.string = mapData.level.toString()
-            this.node.setPosition(new cc.Vec2(-250 + this.indexX * 100, this.indexY * 100))
+            this.node.setPosition(new cc.Vec2(this.offsetX + this.indexX * 100, this.offsetY + this.indexY * 100))
         } else {
             this.sprite_main.node.color = cc.Color.WHITE
         }
     }
 
     moveTo(aimIndex) {
-        let aim = aimIndex * 100
+        let aim = this.offsetY + aimIndex * 100
+        let time = (this.indexY - aimIndex) * 0.1
         new cc.Tween()
             .target(this.node)
-            .to(1, { position: new cc.Vec2(this.node.position.x, aim) })
+            .to(time, { position: new cc.Vec2(this.node.position.x, aim) })
             .start()
     }
 
     moveBy() {
-        let aim = this.indexY * 100
+        let aim =  this.offsetY + this.indexY * 100
+        let time = (6 - this.indexY) * 0.1
         new cc.Tween()
             .target(this.node)
-            .set({ position: new cc.Vec2(-250 + this.indexX * 100, 600), active: true })
-            .to(1, { position: new cc.Vec2(-250 + this.indexX * 100, aim) })
+            .set({ position: new cc.Vec2(this.offsetX + this.indexX * 100, this.offsetY + 600), active: true })
+            .to(time, { position: new cc.Vec2(this.offsetX + this.indexX * 100, aim) })
             .start()
     }
 

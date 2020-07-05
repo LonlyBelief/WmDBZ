@@ -88,8 +88,8 @@ CCProgram fs %{
 
     vec2 targetPoint = random2(ipos);
     float dist = length(fpos - targetPoint);
-    float brightness = sin( 36. - cc_time.x / 36. + 6.28321 * targetPoint.x);
-    vec3 color = vec3(1. - step(0.013,dist)) * brightness;
+    float brightness = (sin( cc_time.x * 10.) + 0.5) / 2.;
+    vec3 color = vec3(1. - step(0.02,dist)) * brightness;
     // vec3 color = vec3(random(ipos));
 
     #if USE_TEXTURE
@@ -97,7 +97,7 @@ CCProgram fs %{
     #endif
 
     // o *= v_color;
-    o = vec4(color,1.0);
+    o = vec4(color,1.0) + o ;
 
     ALPHA_TEST(o);
 
