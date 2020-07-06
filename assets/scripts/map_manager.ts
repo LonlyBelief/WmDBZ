@@ -140,8 +140,7 @@ export default class MapManager extends cc.Component {
             let saveList = []
             for (let j = 0; j < 5; j++) {
                 if (this.mapDatas[i][j].isNeedClear) {
-                    this.mapEntitys[i * 5 + j].node.active = false
-                    // removeList.push(j)
+                    this.mapEntitys[i * 5 + j].changeSize(x, y)
                 } else {
                     saveList.push(j)
                 }
