@@ -11,6 +11,10 @@ export default class ItemMapGrid extends cc.Component {
     label_level: cc.Label = null
     @property(cc.Button)
     btn_select: cc.Button = null
+    @property(cc.Node)
+    node_up:cc.Node = null
+    @property(cc.Node)
+    node_left:cc.Node = null
 
     indexX: number = 0
     indexY: number = 0
@@ -27,24 +31,40 @@ export default class ItemMapGrid extends cc.Component {
         this.indexY = y
 
         let spriteName
+        let exSprite
         let mapData = MapManager.instance.mapDatas[this.indexX][this.indexY]
         if (mapData) {
             switch (mapData.type) {
                 case 1:
                     spriteName = 1
+                    exSprite = 11
                     break
                 case 2:
                     spriteName = 2
+                    exSprite = 21
                     break
                 case 3:
                     spriteName = 3
+                    exSprite = 31
                     break
             }
             this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite(spriteName)
             this.label_level.string = mapData.level.toString()
             this.node.setPosition(new cc.Vec2(this.offsetX + this.indexX * 100, this.offsetY + this.indexY * 100))
-        } else {
-            this.sprite_main.node.color = cc.Color.WHITE
+
+            this.node_up.getComponent(cc.Sprite).spriteFrame = ResourcesManager.instance.getCommonSprite(exSprite)
+            this.node_left.getComponent(cc.Sprite).spriteFrame = ResourcesManager.instance.getCommonSprite(exSprite)
+
+            this.node_up.active = false
+            this.node_left.active = false
+        }
+    }
+
+    showEx(){
+        let mapData = MapManager.instance.mapDatas[this.indexX][this.indexY]
+        if (mapData) {
+            this.node_up.active = mapData.isNextYConnect
+            this.node_left.active = mapData.isNextXConnect
         }
     }
 

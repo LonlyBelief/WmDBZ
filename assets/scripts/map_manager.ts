@@ -81,6 +81,7 @@ export default class MapManager extends cc.Component {
         }
         this.InitMapEntity()
         this.checkConnect(0, 0)
+        this.showConnect()
     }
 
     InitMapEntity() {
@@ -108,6 +109,12 @@ export default class MapManager extends cc.Component {
         mapData.isNextYConnect = this._checkConnect(mapData.type, x, y + 1)
         this._setCheckLeftX(x + 1, y, mapData.isNextXConnect)
         this._setCheckLeftY(x, y + 1, mapData.isNextYConnect)
+    }
+
+    showConnect(){
+        for(let i=0;i<25;i++){
+            this.mapEntitys[i].showEx()
+        }
     }
 
     _setCheckLeftX(x, y, connect) {
