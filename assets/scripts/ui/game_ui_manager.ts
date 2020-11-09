@@ -1,3 +1,4 @@
+import GameManage, { GameStatus } from "../game_manager"
 import MapManager from "../map_manager"
 
 const { ccclass, property } = cc._decorator
@@ -16,6 +17,9 @@ export default class GameUIManager extends cc.Component {
     @property(cc.Button)
     btn_setting: cc.Button = null
 
+    @property(cc.Label)
+    label_game_status: cc.Label = null
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
@@ -30,14 +34,28 @@ export default class GameUIManager extends cc.Component {
         this.node_content.active = true
     }
 
+    refresh() {
+        
+    }
+
     onClickStart() {
         MapManager.instance.InitMap()
-    }
-    onClickRank() {}
-    onClickLevel() {
+        GameManage.instance.setGameOpen()
         this.hideUI()
     }
-    onClickSetting() {}
+    onClickRank() {
+        if(GameManage.instance.gameStatus == GameStatus.End){
+            MapManager.instance.InitMap()
+            GameManage.instance.setGameOpen()
+        }else{
+
+        }
+        this.hideUI()
+     }
+    onClickLevel() {
+        
+    }
+    onClickSetting() { }
 
     hideUI() {
         this.node_content.active = false

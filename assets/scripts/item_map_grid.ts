@@ -41,11 +41,19 @@ export default class ItemMapGrid extends cc.Component {
                     break
                 case 2:
                     spriteName = 2
-                    exSprite = 21
+                    exSprite = 31
                     break
                 case 3:
                     spriteName = 3
-                    exSprite = 31
+                    exSprite = 41
+                    break
+                case 4:
+                    spriteName = 4
+                    exSprite = 51
+                    break
+                default:
+                    spriteName = 5
+                    exSprite = 61
                     break
             }
             this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite(spriteName)
@@ -88,14 +96,14 @@ export default class ItemMapGrid extends cc.Component {
     }
 
     changeSize(aimX, aimY) {
-        let aimPosX = this.offsetX + aimX * 100
-        let aimPosY = this.offsetY + aimY * 100
-        let time = Math.abs(this.indexY - aimY) * 0.1
-        new cc.Tween()
-            .target(this.node)
-            .to(time, { position: new cc.Vec2(aimPosX, aimPosY), scale: 0.5 })
-            .set({ scale: 1, active: false })
-            .start()
+        // let aimPosX = this.offsetX + aimX * 100
+        // let aimPosY = this.offsetY + aimY * 100
+        // let time = Math.abs(this.indexY - aimY) * 0.1
+        // new cc.Tween()
+        //     .target(this.node)
+        //     .to(time, { position: new cc.Vec2(aimPosX, aimPosY), scale: 0.5 })
+        //     .set({ scale: 1, active: false })
+        //     .start()
     }
 
     onClick() {

@@ -37,14 +37,29 @@ export class MapData {
     }
 
     getHeavy(): number {
-        return 0.2 * (this.level - 1) + 0.4
+        if(this.level < 10){
+            return 0.5 * (this.level) + 0.3
+        }else{
+            return 10
+        }
     }
 
     setLevelByScore(score) {
         this.isNeedClear = false
-        let newLevel = Math.ceil(score)
-        if (newLevel > this.level) {
+        let newLevel = Math.floor(score)
+
+        if(this.level < 10 && newLevel >= 10){
+            this.level = 10
+        }else if(this.level == 10){
+            this.level = 10 + Math.floor(score / 10)
+        }else if(this.level < 10 && newLevel > this.level){
             this.level = newLevel
+        }
+
+        if(this.level == 10){
+            this.type = 4
+        }else if(this.level > 10){
+            this.type = this.level
         }
     }
 }
@@ -84,6 +99,9 @@ export default class MapManager extends cc.Component {
         this.showConnect()
     }
 
+    /**
+     * 将地图的数据和表现连接起来
+     */
     InitMapEntity() {
         if (this.mapEntitys.length < 25) {
             for (let i = 0; i < 25; i++) {
@@ -103,6 +121,11 @@ export default class MapManager extends cc.Component {
         }
     }
 
+    /**
+     * 检测当前节点和下级节点是否存在联系
+     * @param x 
+     * @param y 
+     */
     checkConnect(x, y) {
         let mapData = this.mapDatas[x][y]
         mapData.isNextXConnect = this._checkConnect(mapData.type, x + 1, y)
@@ -111,6 +134,9 @@ export default class MapManager extends cc.Component {
         this._setCheckLeftY(x, y + 1, mapData.isNextYConnect)
     }
 
+    /**
+     * 展示当前节点和下级节点的联系
+     */
     showConnect(){
         for(let i=0;i<25;i++){
             this.mapEntitys[i].showEx()
@@ -137,7 +163,16 @@ export default class MapManager extends cc.Component {
         }
     }
 
+    _isAnim:boolean = false
     onClickMap(x, y) {
+        if(!this._getMapIsConnect(x,y)){
+            return
+        }
+
+        if(this._isAnim){
+            return
+        }
+        this._isAnim = true
         let score = this._getScoreNext(x, y, 0)
         this.mapDatas[x][y].setLevelByScore(score)
 
@@ -182,7 +217,11 @@ export default class MapManager extends cc.Component {
         }
         this.mapDatas = newMapDatas
         this.InitMapEntity()
-        this.checkConnect(0, 0)
+        this.scheduleOnce(()=>{
+            this.checkConnect(0, 0)
+            this.showConnect()
+            this._isAnim = false
+        },0.6)
     }
 
     _getScoreNext(x, y, pos) {
@@ -209,4 +248,24 @@ export default class MapManager extends cc.Component {
         }
         return score
     }
+
+    _getMapIsConnect(x,y){
+        let mapData = this.mapDatas[x][y]
+        if (mapData) {
+            if (mapData.isNextXConnect) {
+               return true
+            }
+            if (mapData.isNextYConnect) {
+                return true
+            }
+            if (mapData.isLeftXConnect) {
+                return true
+            }
+            if (mapData.isLeftYConnect) {
+                return true
+            }
+        }
+        return false
+    }
+
 }
