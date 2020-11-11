@@ -12,15 +12,17 @@ export default class ItemMapGrid extends cc.Component {
     @property(cc.Button)
     btn_select: cc.Button = null
     @property(cc.Node)
-    node_up:cc.Node = null
+    node_up: cc.Node = null
     @property(cc.Node)
-    node_left:cc.Node = null
+    node_left: cc.Node = null
 
     indexX: number = 0
     indexY: number = 0
 
     offsetX: number = -200
     offsetY: number = -200
+
+    sp_name: string = "b_"
 
     onLoad() {
         this.btn_select.node.on("click", this.onClick, this)
@@ -29,34 +31,30 @@ export default class ItemMapGrid extends cc.Component {
     Init(x, y) {
         this.indexX = x
         this.indexY = y
+        this.sprite_main.node.scaleX = 1
+        this.sprite_main.node.scaleY = 1
 
-        let spriteName
         let exSprite
         let mapData = MapManager.instance.mapDatas[this.indexX][this.indexY]
         if (mapData) {
             switch (mapData.type) {
                 case 1:
-                    spriteName = 1
-                    exSprite = 11
+                    this.sp_name = "b-"
                     break
                 case 2:
-                    spriteName = 2
-                    exSprite = 31
+                    this.sp_name = "r-"
                     break
                 case 3:
-                    spriteName = 3
-                    exSprite = 41
+                    this.sp_name = "g-"
                     break
                 case 4:
-                    spriteName = 4
-                    exSprite = 51
+                    this.sp_name = "y-"
                     break
                 default:
-                    spriteName = 5
-                    exSprite = 61
+                    this.sp_name = "y-"
                     break
             }
-            this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite(spriteName)
+            this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite(this.sp_name + "0000")
             this.label_level.string = mapData.level.toString()
             this.node.setPosition(new cc.Vec2(this.offsetX + this.indexX * 100, this.offsetY + this.indexY * 100))
 
@@ -68,11 +66,38 @@ export default class ItemMapGrid extends cc.Component {
         }
     }
 
-    showEx(){
+    showEx() {
         let mapData = MapManager.instance.mapDatas[this.indexX][this.indexY]
         if (mapData) {
             this.node_up.active = mapData.isNextYConnect
             this.node_left.active = mapData.isNextXConnect
+
+            let nameStr = ""
+            nameStr += mapData.isLeftXConnect ? "1" : "0"
+            nameStr += mapData.isNextYConnect ? "1" : "0"
+            nameStr += mapData.isNextXConnect ? "1" : "0"
+            nameStr += mapData.isLeftYConnect ? "1" : "0"
+            if (nameStr == "1000") {
+                nameStr = "0010"
+                this.sprite_main.node.scaleX = -1
+            }
+            if (nameStr == "1001") {
+                nameStr = "0011"
+                this.sprite_main.node.scaleX = -1
+            }
+            if (nameStr == "1100") {
+                nameStr = "0110"
+                this.sprite_main.node.scaleX = -1
+            }
+            if (nameStr == "1101") {
+                nameStr = "0111"
+                this.sprite_main.node.scaleX = -1
+            }
+            let sprite = ResourcesManager.instance.getCommonSprite(this.sp_name + nameStr)
+            if (sprite == null) {
+                console.log("=====:" + nameStr)
+            }
+            this.sprite_main.spriteFrame = sprite
         }
     }
 
