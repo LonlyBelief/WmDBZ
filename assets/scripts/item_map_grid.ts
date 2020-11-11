@@ -24,6 +24,9 @@ export default class ItemMapGrid extends cc.Component {
 
     sp_name: string = "b_"
 
+    baseSizeX: number = 95
+    baseSizeY: number = 99
+
     onLoad() {
         this.btn_select.node.on("click", this.onClick, this)
     }
@@ -56,7 +59,7 @@ export default class ItemMapGrid extends cc.Component {
             }
             this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite(this.sp_name + "0000")
             this.label_level.string = mapData.level.toString()
-            this.node.setPosition(new cc.Vec2(this.offsetX + this.indexX * 100, this.offsetY + this.indexY * 100))
+            this.node.setPosition(new cc.Vec2(this.offsetX + this.indexX * this.baseSizeX, this.offsetY + this.indexY * this.baseSizeY))
 
             this.node_up.getComponent(cc.Sprite).spriteFrame = ResourcesManager.instance.getCommonSprite(exSprite)
             this.node_left.getComponent(cc.Sprite).spriteFrame = ResourcesManager.instance.getCommonSprite(exSprite)
@@ -102,8 +105,8 @@ export default class ItemMapGrid extends cc.Component {
     }
 
     moveTo(aimIndex) {
-        let aim = this.offsetY + aimIndex * 100
-        let time = (this.indexY - aimIndex) * 0.1
+        let aim = this.offsetY + aimIndex * this.baseSizeY
+        let time = (this.indexY - aimIndex) * 0.05
         new cc.Tween()
             .target(this.node)
             .to(time, { position: new cc.Vec2(this.node.position.x, aim) })
@@ -111,12 +114,12 @@ export default class ItemMapGrid extends cc.Component {
     }
 
     moveBy() {
-        let aim = this.offsetY + this.indexY * 100
-        let time = (6 - this.indexY) * 0.1
+        let aim = this.offsetY + this.indexY * this.baseSizeY
+        let time = (6 - this.indexY) * 0.05
         new cc.Tween()
             .target(this.node)
-            .set({ position: new cc.Vec2(this.offsetX + this.indexX * 100, this.offsetY + 600), active: true })
-            .to(time, { position: new cc.Vec2(this.offsetX + this.indexX * 100, aim) })
+            .set({ position: new cc.Vec2(this.offsetX + this.indexX * this.baseSizeX, this.offsetY + this.baseSizeY * 6), active: true })
+            .to(time, { position: new cc.Vec2(this.offsetX + this.indexX * this.baseSizeX, aim) })
             .start()
     }
 

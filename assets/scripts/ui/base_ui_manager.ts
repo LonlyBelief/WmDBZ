@@ -1,10 +1,4 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
-
+import MapManager from "../map_manager"
 import GameUIManager from "./game_ui_manager"
 
 const { ccclass, property } = cc._decorator
@@ -15,11 +9,21 @@ export default class BaseUIManager extends cc.Component {
     @property(cc.Button)
     btn_menu: cc.Button = null
 
-    // LIFE-CYCLE CALLBACKS:
+    @property(cc.Label)
+    label_knock_down: cc.Label = null
+    @property(cc.Label)
+    label_max_grade: cc.Label = null
+    @property(cc.Label)
+    label_single_grade: cc.Label = null
 
     onLoad() {
         BaseUIManager.instance = this
         this.btn_menu.node.on("click", this.onClickMenu, this)
+    }
+
+    refresh() {
+        this.label_single_grade.string = MapManager.instance.getAllGrade().toString()
+        this.label_knock_down.string = MapManager.instance.knockDownCount.toString()
     }
 
     onClickMenu() {
