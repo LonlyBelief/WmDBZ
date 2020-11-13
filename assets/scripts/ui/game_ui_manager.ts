@@ -1,3 +1,4 @@
+import PlatformManager from "../common/plantform_manager"
 import GameManage, { GameStatus } from "../game_manager"
 import MapManager from "../map_manager"
 
@@ -34,9 +35,7 @@ export default class GameUIManager extends cc.Component {
         this.node_content.active = true
     }
 
-    refresh() {
-        
-    }
+    refresh() {}
 
     onClickStart() {
         MapManager.instance.InitMap()
@@ -44,18 +43,19 @@ export default class GameUIManager extends cc.Component {
         this.hideUI()
     }
     onClickRank() {
-        if(GameManage.instance.gameStatus == GameStatus.End){
+        if (GameManage.instance.gameStatus == GameStatus.End) {
             MapManager.instance.InitMap()
             GameManage.instance.setGameOpen()
-        }else{
-
+        } else {
         }
         this.hideUI()
-     }
-    onClickLevel() {
-        
     }
-    onClickSetting() { }
+    onClickLevel() {
+        PlatformManager.instance.exitGame()
+    }
+    onClickSetting() {
+        PlatformManager.instance.showAd()
+    }
 
     hideUI() {
         this.node_content.active = false

@@ -1,5 +1,7 @@
+import GameManage from "./game_manager"
 import ItemMapGrid from "./item_map_grid"
 import BaseUIManager from "./ui/base_ui_manager"
+import GameUIManager from "./ui/game_ui_manager"
 import MessageBoxUIManager from "./ui/message_box_ui"
 
 const { ccclass, property } = cc._decorator
@@ -96,6 +98,8 @@ export default class MapManager extends cc.Component {
 
     knockDownCount: number = 2
 
+    canAddCount: number = 2
+
     onLoad() {
         MapManager.instance = this
     }
@@ -155,10 +159,9 @@ export default class MapManager extends cc.Component {
         this._setCheckLeftY(x, y + 1, mapData.isNextYConnect)
 
         if (this.checkGameIsEnd()) {
-            MessageBoxUIManager.instance.showUI("游戏结束", "是否向好友炫耀一下", (ok) => {
+            MessageBoxUIManager.instance.showUI("游戏结束", "是否重新开始", (ok) => {
                 if (ok) {
-                    this.knockDownCount -= 1
-                    MapManager.instance.knockDown(x, y)
+                    GameUIManager.instance.showUI()
                 }
             })
         }
@@ -260,7 +263,7 @@ export default class MapManager extends cc.Component {
             this.checkConnect(0, 0)
             this.showConnect()
             this._isAnim = false
-        }, 0.6)
+        }, 0.4)
     }
     addBuild(x, y) {
         let score = this._getScoreNext(x, y, 0)
@@ -311,7 +314,7 @@ export default class MapManager extends cc.Component {
             this.checkConnect(0, 0)
             this.showConnect()
             this._isAnim = false
-        }, 0.6)
+        }, 0.4)
     }
 
     _getScoreNext(x, y, pos) {
@@ -385,5 +388,10 @@ export default class MapManager extends cc.Component {
         } else {
             return false
         }
+    }
+
+    watchVideoCallback() {
+        this.canAddCount -= 1
+        this.knockDownCount += 1
     }
 }
