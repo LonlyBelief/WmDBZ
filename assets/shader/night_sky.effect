@@ -88,7 +88,7 @@ CCProgram fs %{
 
     vec2 targetPoint = random2(ipos);
     float dist = length(fpos - targetPoint);
-    float brightness = (sin( cc_time.x * 10.) + 0.5) / 2.;
+    float brightness = (sin( cc_time.x * 10.) + 1.) / 2.;
     vec3 color = vec3(1. - step(0.02,dist)) * brightness;
     // vec3 color = vec3(random(ipos));
 

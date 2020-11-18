@@ -22,7 +22,7 @@ export default class ItemMapGrid extends cc.Component {
     offsetX: number = -200
     offsetY: number = -200
 
-    sp_name: string = "b_"
+    sp_color: cc.Color = cc.Color.WHITE
 
     baseSizeX: number = 95
     baseSizeY: number = 99
@@ -42,22 +42,23 @@ export default class ItemMapGrid extends cc.Component {
         if (mapData) {
             switch (mapData.type) {
                 case 1:
-                    this.sp_name = "b-"
+                    this.sp_color = cc.Color.RED
                     break
                 case 2:
-                    this.sp_name = "r-"
+                    this.sp_color = cc.Color.GREEN
                     break
                 case 3:
-                    this.sp_name = "g-"
+                    this.sp_color = cc.Color.BLUE
                     break
                 case 4:
-                    this.sp_name = "y-"
+                    this.sp_color = cc.Color.YELLOW
                     break
                 default:
-                    this.sp_name = "y-"
+                    this.sp_color = cc.Color.GRAY
                     break
             }
-            this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite(this.sp_name + "0000")
+            this.sprite_main.spriteFrame = ResourcesManager.instance.getCommonSprite("0000")
+            this.sprite_main.node.color = this.sp_color
             this.label_level.string = mapData.level.toString()
             this.node.setPosition(new cc.Vec2(this.offsetX + this.indexX * this.baseSizeX, this.offsetY + this.indexY * this.baseSizeY))
 
@@ -96,7 +97,19 @@ export default class ItemMapGrid extends cc.Component {
                 nameStr = "0111"
                 this.sprite_main.node.scaleX = -1
             }
-            let sprite = ResourcesManager.instance.getCommonSprite(this.sp_name + nameStr)
+            if (nameStr == "1111") {
+                nameStr = "1111_1"
+            }
+            if (nameStr == "0111") {
+                nameStr = "0111_1"
+            }
+            if (nameStr == "1110") {
+                nameStr = "1110_1"
+            }
+            if (nameStr == "1011") {
+                nameStr = "1011_1"
+            }
+            let sprite = ResourcesManager.instance.getCommonSprite(nameStr)
             if (sprite == null) {
                 console.log("=====:" + nameStr)
             }
