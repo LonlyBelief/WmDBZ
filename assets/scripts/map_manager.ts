@@ -153,6 +153,10 @@ export default class MapManager extends cc.Component {
      */
     checkConnect(x, y) {
         let mapData = this.mapDatas[x][y]
+        mapData.isLeftXConnect = false
+        mapData.isLeftYConnect = false
+        mapData.isNextXConnect = false
+        mapData.isNextYConnect = false
         mapData.isNextXConnect = this._checkConnect(mapData.type, x + 1, y)
         mapData.isNextYConnect = this._checkConnect(mapData.type, x, y + 1)
         this._setCheckLeftX(x + 1, y, mapData.isNextXConnect)
